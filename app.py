@@ -54,6 +54,21 @@ def delete(id:int):
         return "ERROR: {e}"
 
 
+#update a task
+@app.route("/edit/<int:id>", methods=["GET", "POST"])
+def update(id:int):      
+    edited_task = MyTask.query.get_or_404(id)
+    if request.method == "POST":
+        edited_task.content = request.form['content']
+        try:
+            db.session.commit()
+            return redirect("/")
+        except Exception as e:
+            print(f"ERROR: {e}")
+            return "ERROR: {e}"
+    else: 
+        return render_template("editTask.html", task=edited_task)     
+
 if __name__ in"__main__":
     with app.app_context():
         db.create_all()
